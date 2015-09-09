@@ -166,7 +166,7 @@
 .daterangepicker .calendar.right .calendar-table {
   border-left: none;
   border-top-left-radius: 0;
-  border-bottom-left-radius: 0;  
+  border-bottom-left-radius: 0;
 }
 
 .daterangepicker .calendar.left {
@@ -229,6 +229,15 @@
   background-color: #357ebd;
   border-color: #3071a9;
   color: #fff;
+}
+.daterangepicker td.active-red, .daterangepicker td.active-red:hover {
+  background-color: #F86D10;
+  border-color: #3071a9;
+  color: #fff;
+}
+.daterangepicker td.in-range-red {
+  background: #EFC05C;
+  border-radius: 0;
 }
 
 .daterangepicker td.week, .daterangepicker th.week {

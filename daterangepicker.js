@@ -129,6 +129,7 @@
                         '<button class="applyBtn" disabled="disabled" type="button"></button> ' +
                         '<button class="cancelBtn" type="button"></button>' +
                     '</div>' +
+                    '<input type="checkbox" id="checker">'+
                 '</div>' +
             '</div>';
 
@@ -210,6 +211,9 @@
 
         if (typeof options.applyClass === 'string')
             this.applyClass = options.applyClass;
+
+        if (typeof options.compare === 'boolean')
+            this.compare = options.compare;
 
         if (typeof options.cancelClass === 'string')
             this.cancelClass = options.cancelClass;
@@ -420,6 +424,7 @@
             .on('click.daterangepicker', 'button.applyBtn', $.proxy(this.clickApply, this))
             .on('click.daterangepicker', 'button.cancelBtn', $.proxy(this.clickCancel, this))
             .on('click.daterangepicker', 'li', $.proxy(this.clickRange, this))
+            .on('click.checker','input#checker', $.proxy(this.toggleChecker,this))
             .on('mouseenter.daterangepicker', 'li', $.proxy(this.hoverRange, this))
             .on('mouseleave.daterangepicker', 'li', $.proxy(this.updateFormInputs, this));
 
@@ -507,10 +512,10 @@
                 this.compStartDate = moment(compStartDate);
 
             if (!this.timePicker)
-                this.compStartDate = this.compStartDate.startOf('day');
+                this.compStartDate = compStartDate.startOf('day');
 
             if (this.timePicker && this.timePickerIncrement)
-                this.compStartDate.minute(Math.round(this.compStartDate.minute() / this.timePickerIncrement) * this.timePickerIncrement);
+                this.compStartDate.minute(Math.round(compStartDate.minute() / this.timePickerIncrement) * this.timePickerIncrement);
 
             if (this.minDate && this.compStartDate.isBefore(this.minDate))
                 this.compStartDate = this.minDate;
@@ -528,14 +533,12 @@
             if (typeof endDate === 'object')
                 this.compEndDate = moment(compEndDate);
 
-            if (!this.timePicker)
-                this.compEndDate = this.compEndDate.endOf('day');
-
-            if (this.timePicker && this.timePickerIncrement)
-                this.compEndDate.minute(Math.round(this.compEndDate.minute() / this.timePickerIncrement) * this.timePickerIncrement);
+            if (!this.timePicker){
+              this.compEndDate = compEndDate.endOf('day');
+            }
 
             if (this.compEndDate.isBefore(this.compStartDate))
-                this.compEndDate = this.compStartDate.clone();
+                this.compEndDate = compStartDate.clone();
 
             if (this.maxDate && this.compEndDate.isAfter(this.maxDate))
                 this.compEndDate = this.maxDate;
@@ -864,6 +867,21 @@
                     //highlight dates in-between the selected dates
                     if (this.endDate != null && calendar[row][col] > this.startDate && calendar[row][col] < this.endDate)
                         classes.push('in-range');
+
+                        /////
+                        //highlight the currently selected start date
+                        if (calendar[row][col].format('YYYY-MM-DD') == this.compStartDate.format('YYYY-MM-DD'))
+                            classes.push('active-red', 'start-date');
+
+                        //highlight dates in-between the selected dates
+                        if (this.compEndDate != null && calendar[row][col] > this.compStartDate && calendar[row][col] < this.compEndDate)
+                            classes.push('in-range');
+
+                        //highlight the currently selected end date
+                        if (this.compEndDate != null && calendar[row][col].format('YYYY-MM-DD') == this.compEndDate.format('YYYY-MM-DD'))
+                            classes.push('active-red', 'end-date');
+
+                        //////
 
                     var cname = '', disabled = false;
                     for (var i = 0; i < classes.length; i++) {
@@ -1218,6 +1236,13 @@
             }
             this.updateCalendars();
         },
+        toggleChecker: function() {
+            if(this.compare){
+              this.compare=false;
+            }else{
+              this.compare=true;
+            }
+        },
 
         clickNext: function(e) {
             var cal = $(e.target).parents('.calendar');
@@ -1293,6 +1318,8 @@
             // * if autoapply is enabled, and an end date was chosen, apply the selection
             // * if single date picker mode, and time picker isn't enabled, apply the selection immediately
             //
+            if(!this.compare){
+              console.log("compare");
 
             if (this.endDate || date.isBefore(this.startDate)) {
                 if (this.timePicker) {
@@ -1328,12 +1355,25 @@
                 if (this.autoApply)
                     this.clickApply();
             }
+          }else{
 
+            /////
+            console.log(this.compStartDate);
+            if (this.compEndDate || date.isBefore(this.compStartDate)) {
+                this.compEndDate = null;
+                this.setCompStartDate(date.clone());
+            } else {
+                this.setCompEndDate(date.clone());
+                if (this.autoApply)
+                    this.clickApply();
+            }
+            /////
             if (this.singleDatePicker) {
                 this.setEndDate(this.startDate);
                 if (!this.timePicker)
                     this.clickApply();
             }
+          }
 
             this.updateView();
 
@@ -1486,6 +1526,7 @@
 
             this.setStartDate(start);
             this.setEndDate(end);
+            console.log("controlChanged");
             this.updateView();
         },
 
