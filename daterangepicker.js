@@ -55,7 +55,11 @@
         this.linkedCalendars = true;
         this.autoUpdateInput = true;
         this.ranges = {};
-
+        ////
+        this.compare = false;
+        this.compStartDate = moment().startOf('day');
+        this.compEndDate = moment().endOf('day');
+        ////
         this.opens = 'right';
         if (this.element.hasClass('pull-right'))
             this.opens = 'left';
@@ -183,7 +187,13 @@
 
         if (typeof options.endDate === 'object')
             this.endDate = moment(options.endDate);
+        /////
+        if (typeof options.compStartDate === 'object')
+            this.compStartDate = moment(options.compStartDate);
 
+        if (typeof options.compEndDate === 'object')
+            this.compEndDate = moment(options.compEndDate);
+        //////
         if (typeof options.minDate === 'object')
             this.minDate = moment(options.minDate);
 
@@ -488,6 +498,54 @@
 
             this.updateMonthsInView();
         },
+        /////
+        setCompStartDate: function(compStartDate) {
+            if (typeof compStartDate === 'string')
+                this.compStartDate = moment(compStartDate, this.locale.format).utcOffset(this.timeZone);
+
+            if (typeof compStartDate === 'object')
+                this.compStartDate = moment(compStartDate);
+
+            if (!this.timePicker)
+                this.compStartDate = this.compStartDate.startOf('day');
+
+            if (this.timePicker && this.timePickerIncrement)
+                this.compStartDate.minute(Math.round(this.compStartDate.minute() / this.timePickerIncrement) * this.timePickerIncrement);
+
+            if (this.minDate && this.compStartDate.isBefore(this.minDate))
+                this.compStartDate = this.minDate;
+
+            if (this.maxDate && this.compStartDate.isAfter(this.maxDate))
+                this.compStartDate = this.maxDate;
+
+            this.updateMonthsInView();
+        },
+
+        setCompEndDate: function(compEndDate) {
+            if (typeof compEndDate === 'string')
+                this.compEndDate = moment(endDate, this.locale.format).utcOffset(this.timeZone);
+
+            if (typeof endDate === 'object')
+                this.compEndDate = moment(compEndDate);
+
+            if (!this.timePicker)
+                this.compEndDate = this.compEndDate.endOf('day');
+
+            if (this.timePicker && this.timePickerIncrement)
+                this.compEndDate.minute(Math.round(this.compEndDate.minute() / this.timePickerIncrement) * this.timePickerIncrement);
+
+            if (this.compEndDate.isBefore(this.compStartDate))
+                this.compEndDate = this.compStartDate.clone();
+
+            if (this.maxDate && this.compEndDate.isAfter(this.maxDate))
+                this.compEndDate = this.maxDate;
+
+            if (this.dateLimit && this.compStartDate.clone().add(this.dateLimit).isBefore(this.compEndDate))
+                this.compEndDate = this.compStartDate.clone().add(this.dateLimit);
+
+            this.updateMonthsInView();
+        },
+        /////
 
         isInvalidDate: function() {
             return false;
@@ -533,7 +591,7 @@
                 } else {
                     this.rightCalendar.month = this.startDate.clone().date(2).add(1, 'month');
                 }
-                
+
             } else {
                 if (this.leftCalendar.month.format('YYYY-MM') != this.startDate.format('YYYY-MM') && this.rightCalendar.month.format('YYYY-MM') != this.startDate.format('YYYY-MM')) {
                     this.leftCalendar.month = this.startDate.clone().date(2);
@@ -1143,7 +1201,8 @@
                     this.endDate.endOf('day');
                 }
 
-                this.hideCalendars();
+                //Prevent from hiding
+                //this.hideCalendars();
                 this.clickApply();
             }
         },
