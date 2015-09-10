@@ -304,6 +304,24 @@
   position: relative;
 }
 
+.daterangepicker .input-mini.active {
+  border: 1px solid #357ebd;
+}
+
+.daterangepicker .daterangepicker_input_comp i {
+  position: absolute;
+  left: 8px;
+  top: 8px;
+}
+
+.daterangepicker .left .daterangepicker_input_comp {
+  padding-right: 12px;
+}
+
+.daterangepicker .daterangepicker_input_comp {
+  position: relative;
+}
+
 /* Time Picker */
 
 .daterangepicker .calendar-time {
