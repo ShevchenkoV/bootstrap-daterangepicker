@@ -457,6 +457,9 @@
     DateRangePicker.prototype = {
 
         constructor: DateRangePicker,
+        position:{
+          stage:1,step:1
+        },
 
         setStartDate: function(startDate) {
             if (typeof startDate === 'string')
@@ -1223,9 +1226,7 @@
                     this.endDate.endOf('day');
                 }
 
-                //Prevent from hiding
-                //this.hideCalendars();
-                this.clickApply();
+                this.updateCalendars();
             }
         },
 
@@ -1321,7 +1322,7 @@
         },
 
         clickDate: function(e) {
-
+            var that=this;
             if (!$(e.target).hasClass('available')) return;
 
             var title = $(e.target).attr('data-title');
@@ -1337,61 +1338,44 @@
             // * if autoapply is enabled, and an end date was chosen, apply the selection
             // * if single date picker mode, and time picker isn't enabled, apply the selection immediately
             //
+            var withoutCompare=function(){
+              if (this.endDate || date.isBefore(this.startDate)) {
+                  this.endDate = null;
+                  this.position.step=1;
+                  this.setStartDate(date.clone());
+              } else {
+                  this.position.step=2;
+                  this.setEndDate(date.clone());
+                  if (this.autoApply)
+                      this.clickApply();
+              }
+            };
+
+            //single daterange
             if(!this.compare){
-              console.log(this.compare);
+              withoutCompare.call(that);
+            }else{
 
-            if (this.endDate || date.isBefore(this.startDate)) {
-                if (this.timePicker) {
-                    var hour = parseInt(this.container.find('.left .hourselect').val(), 10);
-                    if (!this.timePicker24Hour) {
-                        var ampm = cal.find('.ampmselect').val();
-                        if (ampm === 'PM' && hour < 12)
-                            hour += 12;
-                        if (ampm === 'AM' && hour === 12)
-                            hour = 0;
-                    }
-                    var minute = parseInt(this.container.find('.left .minuteselect').val(), 10);
-                    var second = this.timePickerSeconds ? parseInt(this.container.find('.left .secondselect').val(), 10) : 0;
-                    date = date.clone().hour(hour).minute(minute).second(second);
-                }
-                this.endDate = null;
-                this.setStartDate(date.clone());
-            } else {
-                if (this.timePicker) {
-                    var hour = parseInt(this.container.find('.right .hourselect').val(), 10);
-                    if (!this.timePicker24Hour) {
-                        var ampm = this.container.find('.right .ampmselect').val();
-                        if (ampm === 'PM' && hour < 12)
-                            hour += 12;
-                        if (ampm === 'AM' && hour === 12)
-                            hour = 0;
-                    }
-                    var minute = parseInt(this.container.find('.right .minuteselect').val(), 10);
-                    var second = this.timePickerSeconds ? parseInt(this.container.find('.right .secondselect').val(), 10) : 0;
-                    date = date.clone().hour(hour).minute(minute).second(second);
-                }
-                this.setEndDate(date.clone());
-                if (this.autoApply)
-                    this.clickApply();
-            }
-          }else{
+              if(this.position.stage==1 && this.position.step<=2 ){
+                withoutCompare.call(that);
+                this.position.step==2?this.position.stage=2 : this.position.stage=1;
+              }
+              else if(this.position.stage==2 && this.position.step<=2){
 
-            /////
-            if (this.compEndDate || date.isBefore(this.compStartDate)) {
-                this.compEndDate = null;
-                this.setCompStartDate(date.clone());
-            } else {
-                this.setCompEndDate(date.clone());
-                if (this.autoApply)
-                    this.clickApply();
+                if (this.compEndDate || date.isBefore(this.compStartDate)) {
+                    this.compEndDate = null;
+                    this.setCompStartDate(date.clone());
+                    this.position.step=1;
+                } else {
+                    this.setCompEndDate(date.clone());
+                    this.position.step=2;
+                    this.position.step==2?this.position.stage=1 : this.position.stage=2;
+
+                    if (this.autoApply)
+                        this.clickApply();
+                }
+              }
             }
-            /////
-            if (this.singleDatePicker) {
-                this.setEndDate(this.startDate);
-                if (!this.timePicker)
-                    this.clickApply();
-            }
-          }
 
             this.updateView();
 
