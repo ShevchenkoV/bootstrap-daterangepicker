@@ -848,7 +848,7 @@
 
                         //highlight dates in-between the selected dates
                         if (this.compEndDate != null && calendar[row][col] > this.compStartDate && calendar[row][col] < this.compEndDate && this.compare)
-                            classes.push('in-range');
+                            classes.push('in-range-red');
 
                         //highlight the currently selected end date
                         if (this.compEndDate != null && calendar[row][col].format('YYYY-MM-DD') == this.compEndDate.format('YYYY-MM-DD')&& this.compare)
