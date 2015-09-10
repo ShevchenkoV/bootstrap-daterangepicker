@@ -31,6 +31,7 @@
       $(document).ready(function() {
           var options={};
           options={
+            maxDate:moment(),
             ranges:{
            'Last 7 Days': [moment().subtract(6, 'days'), moment()],
            'Last 30 Days': [moment().subtract(29, 'days'), moment()],

@@ -579,6 +579,12 @@
             this.updateCalendars();
             this.updateFormInputs();
         },
+        updatePrevious:function(){
+          var daysOffset=Math.round((this.endDate-this.startDate)/(24*3600*1000));
+          this.setCompStartDate(moment(this.startDate).subtract(daysOffset, 'days'));
+          this.setCompEndDate(moment(this.endDate).subtract(daysOffset, 'days'));
+          this.updateView();
+        },
 
         updateMonthsInView: function() {
             if (this.endDate) {
@@ -1256,6 +1262,7 @@
                   '</div>';
               this.compare=true;
               this.container.find('.ranges').append(tpl);
+              this.updatePrevious();
             }
         },
 
