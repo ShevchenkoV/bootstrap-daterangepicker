@@ -1150,7 +1150,7 @@
 
             //if a new date range was selected, invoke the user callback function
             if (!this.startDate.isSame(this.oldStartDate) || !this.endDate.isSame(this.oldEndDate))
-                this.callback(this.startDate, this.endDate, this.chosenLabel);
+                this.callback(this.startDate, this.endDate, this.chosenLabel,this.compEndDate,this.compStartDate);
 
             //if picker is attached to a text input, update it
             if (this.element.is('input') && !this.singleDatePicker && this.autoUpdateInput) {
@@ -1370,7 +1370,6 @@
                     this.setCompEndDate(date.clone());
                     this.position.step=2;
                     this.position.step==2?this.position.stage=1 : this.position.stage=2;
-
                     if (this.autoApply)
                         this.clickApply();
                 }

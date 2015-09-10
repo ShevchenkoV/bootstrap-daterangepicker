@@ -31,8 +31,6 @@
       $(document).ready(function() {
           var options={};
           options={
-            compEndDate:"09/09/2015",
-            compStartDate:"09/03/2015",
             ranges:{
            'Last 7 Days': [moment().subtract(6, 'days'), moment()],
            'Last 30 Days': [moment().subtract(29, 'days'), moment()],
@@ -40,7 +38,10 @@
            'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
         }}
 
-          $('#config-demo').daterangepicker(options, function(start, end, label) { console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')'); });
+          $('#config-demo').daterangepicker(options, function(start, end, label,compEndDate,compStartDate) {
+             console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
+             console.log(compStartDate.format('YYYY-MM-DD') + ' to ' + compEndDate.format('YYYY-MM-DD'));
+           });
 
       });
       </script>
