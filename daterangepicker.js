@@ -425,6 +425,7 @@
             .on('click.daterangepicker', 'button.cancelBtn', $.proxy(this.clickCancel, this))
             .on('click.daterangepicker', 'li', $.proxy(this.clickRange, this))
             .on('click.checker','input#checker', $.proxy(this.toggleChecker,this))
+            .on('change.daterangepicker', '.daterangepicker_input input', $.proxy(this.formInputsChanged, this))
             .on('mouseenter.daterangepicker', 'li', $.proxy(this.hoverRange, this))
             .on('mouseleave.daterangepicker', 'li', $.proxy(this.updateFormInputs, this));
 
@@ -870,15 +871,15 @@
 
                         /////
                         //highlight the currently selected start date
-                        if (calendar[row][col].format('YYYY-MM-DD') == this.compStartDate.format('YYYY-MM-DD'))
+                        if (calendar[row][col].format('YYYY-MM-DD') == this.compStartDate.format('YYYY-MM-DD') && this.compare)
                             classes.push('active-red', 'start-date');
 
                         //highlight dates in-between the selected dates
-                        if (this.compEndDate != null && calendar[row][col] > this.compStartDate && calendar[row][col] < this.compEndDate)
+                        if (this.compEndDate != null && calendar[row][col] > this.compStartDate && calendar[row][col] < this.compEndDate && this.compare)
                             classes.push('in-range');
 
                         //highlight the currently selected end date
-                        if (this.compEndDate != null && calendar[row][col].format('YYYY-MM-DD') == this.compEndDate.format('YYYY-MM-DD'))
+                        if (this.compEndDate != null && calendar[row][col].format('YYYY-MM-DD') == this.compEndDate.format('YYYY-MM-DD')&& this.compare)
                             classes.push('active-red', 'end-date');
 
                         //////
@@ -1039,6 +1040,9 @@
 
         updateFormInputs: function() {
             this.container.find('input[name=daterangepicker_start]').val(this.startDate.format(this.locale.format));
+            this.container.find('input[name=daterangepicker_comp_start]').val(this.compStartDate.format(this.locale.format));
+            if (this.compEndDate)
+                this.container.find('input[name=daterangepicker_comp_end]').val(this.compEndDate.format(this.locale.format));
             if (this.endDate)
                 this.container.find('input[name=daterangepicker_end]').val(this.endDate.format(this.locale.format));
 
@@ -1239,8 +1243,18 @@
         toggleChecker: function() {
             if(this.compare){
               this.compare=false;
+              this.container.find('.ranges>.daterangepicker_input').remove();
             }else{
+              var tpl='<div class="daterangepicker_input">' +
+                    '<input class="input-mini" type="text" name="daterangepicker_comp_start" value="" />' +
+                    '<i class="fa fa-calendar glyphicon glyphicon-calendar"></i>' +
+                  '</div>' +
+                  '<div class="daterangepicker_input">' +
+                    '<input class="input-mini" type="text" name="daterangepicker_comp_end" value="" />' +
+                    '<i class="fa fa-calendar glyphicon glyphicon-calendar"></i>' +
+                  '</div>';
               this.compare=true;
+              this.container.find('.ranges').append(tpl);
             }
         },
 
@@ -1273,6 +1287,12 @@
             } else {
                 this.container.find('input[name=daterangepicker_end]').val(date.format(this.locale.format));
             }
+            if (this.compEndDate && this.compare) {
+                this.container.find('input[name=daterangepicker_comp_start]').val(date.format(this.locale.format));
+            } else {
+                this.container.find('input[name=daterangepicker_comp_end]').val(date.format(this.locale.format));
+            }
+
 
             //highlight the dates between the start date and the date being hovered as a potential end date
             var leftCalendar = this.leftCalendar;
@@ -1295,7 +1315,6 @@
                     } else {
                         $(el).removeClass('in-range');
                     }
-
                 });
             }
 
@@ -1319,7 +1338,7 @@
             // * if single date picker mode, and time picker isn't enabled, apply the selection immediately
             //
             if(!this.compare){
-              console.log("compare");
+              console.log(this.compare);
 
             if (this.endDate || date.isBefore(this.startDate)) {
                 if (this.timePicker) {
@@ -1358,7 +1377,6 @@
           }else{
 
             /////
-            console.log(this.compStartDate);
             if (this.compEndDate || date.isBefore(this.compStartDate)) {
                 this.compEndDate = null;
                 this.setCompStartDate(date.clone());
@@ -1483,6 +1501,9 @@
             var start = moment(this.container.find('input[name="daterangepicker_start"]').val(), this.locale.format).utcOffset(this.timeZone);
             var end = moment(this.container.find('input[name="daterangepicker_end"]').val(), this.locale.format).utcOffset(this.timeZone);
 
+            var compStart = moment(this.container.find('input[name="daterangepicker_comp_start"]').val(), this.locale.format).utcOffset(this.timeZone);
+            var compEnd = moment(this.container.find('input[name="daterangepicker_comp_end"]').val(), this.locale.format).utcOffset(this.timeZone);
+
             if (start.isValid() && end.isValid()) {
 
                 if (isRight && end.isBefore(start))
@@ -1495,6 +1516,20 @@
                     this.container.find('input[name="daterangepicker_start"]').val(this.startDate.format(this.locale.format));
                 } else {
                     this.container.find('input[name="daterangepicker_end"]').val(this.endDate.format(this.locale.format));
+                }
+
+            }
+            if (compStart.isValid() && compEnd.isValid()) {
+                if (isRight && compEnd.isBefore(compStart))
+                    compStart = compEnd.clone();
+
+                this.setCompStartDate(compStart);
+                this.setCompEndDate(compEnd);
+
+                if (isRight) {
+                    this.container.find('input[name="daterangepicker_comp_start"]').val(this.compStartDate.format(this.locale.format));
+                } else {
+                    this.container.find('input[name="daterangepicker_comp_end"]').val(this.compEndDate.format(this.locale.format));
                 }
 
             }
@@ -1526,7 +1561,6 @@
 
             this.setStartDate(start);
             this.setEndDate(end);
-            console.log("controlChanged");
             this.updateView();
         },
 
