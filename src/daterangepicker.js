@@ -175,6 +175,10 @@
         if (typeof options.compEndDate === 'object')
             this.compEndDate = moment(options.compEndDate);
 
+        if(options.compare){
+            this.toggleChecker();$( "input#checker" ).prop('checked', true);
+          }
+
         if (typeof options.minDate === 'object')
             this.minDate = moment(options.minDate);
 
@@ -535,7 +539,7 @@
             for (var range in this.ranges) {
                     if (this.startDate.format('YYYY-MM-DD') == this.ranges[range][0].format('YYYY-MM-DD') && this.endDate.format('YYYY-MM-DD') == this.ranges[range][1].format('YYYY-MM-DD')) {
                         customRange = false;
-                        this.chosenLabel = this.container.find('.ranges select#datePredef option:selected').html();
+                        this.chosenLabel = this.container.find('.ranges select#datePredef option').filter(function () { return $(this).html() == range; }).prop('selected', true).html();
                         break;
                     }
                 i++;
