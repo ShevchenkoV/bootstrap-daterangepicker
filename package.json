@@ -1,28 +1,23 @@
 {
-  "name": "bootstrap-daterangepicker",
-  "version": "2.0.9",
-  "description": "Date range picker component for Bootstrap",
-  "main": "daterangepicker.js",
-  "style": "daterangepicker.css",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "name": "bootstrap-daterangepicker-sliced",
+  "version": "1.0",
+  "description": "Date range picker component for Bootstrap like in GA",
   "repository": {
     "type": "git",
-    "url": "https://github.com/dangrossman/bootstrap-daterangepicker.git"
-  },
-  "author": {
-    "name": "Dan Grossman",
-    "email": "dan@dangrossman.info",
-    "url": "http://www.dangrossman.info"
+    "url": "https://github.com/ShevchenkoV/bootstrap-daterangepicker.git"
   },
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/dangrossman/bootstrap-daterangepicker/issues"
-  },
-  "homepage": "https://github.com/dangrossman/bootstrap-daterangepicker",
   "dependencies": {
     "jquery": "^1.10",
     "moment": "^2.9.0"
-  }
+  },
+  "devDependencies": {
+   "grunt": "~0.4.4",
+   "grunt-contrib-jshint": "latest",
+   "jshint-stylish": "latest",
+   "grunt-contrib-uglify": "latest",
+   "grunt-contrib-less": "latest",
+   "grunt-contrib-cssmin": "latest",
+   "grunt-contrib-watch": "latest"
+ }
 }
