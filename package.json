@@ -1,6 +1,6 @@
 {
   "name": "bootstrap-daterangepicker-sliced",
-  "version": "1.0",
+  "version": "0.1.1",
   "description": "Date range picker component for Bootstrap like in GA",
   "repository": {
     "type": "git",
