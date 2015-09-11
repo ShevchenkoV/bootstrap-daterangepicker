@@ -176,7 +176,17 @@
             this.compEndDate = moment(options.compEndDate);
 
         if(options.compare){
-            this.toggleChecker();$( "input#checker" ).prop('checked', true);
+            $( "input#checker" ).prop('checked', true);
+            var tpl='<div class="daterangepicker_input_comp">' +
+                  '<input class="input-mini" type="text" name="daterangepicker_comp_start" value="" />' +
+                  '<i class="fa fa-calendar glyphicon glyphicon-calendar"></i>' +
+                '</div>' +
+                '<div class="daterangepicker_input_comp">' +
+                  '<input class="input-mini" type="text" name="daterangepicker_comp_end" value="" />' +
+                  '<i class="fa fa-calendar glyphicon glyphicon-calendar"></i>' +
+                '</div>';
+            this.compare=true;
+            this.container.find('.ranges').append(tpl);
           }
 
         if (typeof options.minDate === 'object')
@@ -364,7 +374,7 @@
 
         this.container.find('.ranges')
             .on('change.daterangepicker', 'select#datePredef', $.proxy(this.clickRange, this))
-            .on('click.daterangepicker', 'select#comp_select', $.proxy(this.clickCompRange, this))
+            .on('change.daterangepicker', 'select#comp_select', $.proxy(this.clickCompRange, this))
             .on('click.checker','input#checker', $.proxy(this.toggleChecker,this))
             .on('change.daterangepicker', '.daterangepicker_input input', $.proxy(this.formInputsChanged, this))
             .on('change.daterangepicker', '.daterangepicker_input_comp input', $.proxy(this.formInputsChanged, this))
@@ -549,7 +559,23 @@
                 this.chosenLabel = this.container.find('.ranges select#datePredef option').last().prop('selected', true).html();
                 this.showCalendars();
             }
+            
+            if(this.compare && this.compEndDate && this.compStartDate){
+              var daysOffset=Math.round((this.endDate.clone()-this.startDate.clone())/(24*3600*1000)),
+                  daysCompOffset=Math.round((this.compEndDate.clone()-this.compStartDate.clone())/(24*3600*1000)),
+                  isSame=this.compEndDate.format('YYYY-MM-DD') == this.startDate.clone().subtract(1,'days').format('YYYY-MM-DD') && daysOffset == daysCompOffset;
 
+              if(isSame){
+                this.container.find('.ranges select#comp_select option').first().prop('selected', true).html();
+              }else{
+                this.container.find('.ranges select#comp_select option').last().prop('selected', true).html();
+              }
+
+            }
+
+          //  var daysOffset=Math.round((this.endDate-this.startDate)/(24*3600*1000));
+            //this.setCompStartDate(moment(this.startDate).subtract(daysOffset, 'days'));
+            //this.setCompEndDate(moment(this.endDate).subtract(daysOffset, 'days'));
         },
 
         renderCalendar: function(side) {
