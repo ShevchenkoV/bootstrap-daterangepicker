@@ -195,9 +195,15 @@
   cursor: pointer;
 }
 
-.daterangepicker td.off, .daterangepicker td.off.in-range, .daterangepicker td.off.start-date, .daterangepicker td.off.end-date {
-  color: #999;
-  background: #fff;
+.daterangepicker td.off,
+.daterangepicker td.off.in-range,
+.daterangepicker td.off.in-range-red,
+.daterangepicker td.off.start-date,
+.daterangepicker td.off.end-date,
+.daterangepicker td.off.active-red,
+.daterangepicker td.off.in-range-red.in-range {
+  color: #999 !important;
+  background: #fff !important;
 }
 
 .daterangepicker td.disabled, .daterangepicker option.disabled {
@@ -225,18 +231,22 @@
   border-radius: 4px;
 }
 
-.daterangepicker td.active, .daterangepicker td.active:hover {
-  background-color: #357ebd;
+.daterangepicker td.active, .daterangepicker td.active.end-date.in-range.in-range-red, .daterangepicker td.active:hover {
+  background-color: #357ebd !important;
   border-color: #3071a9;
   color: #fff;
 }
-.daterangepicker td.active-red, .daterangepicker td.active-red:hover {
+.daterangepicker td.active-red, .in-range.in-range-red.active-red.end-date, .in-range.in-range-red.active-red.start-date, .daterangepicker td.active-red:hover {
   background-color: #F86D10 !important;
   border-color: #3071a9;
   color: #fff;
 }
 .daterangepicker td.in-range-red {
   background: #EFC05C;
+  border-radius: 0;
+}
+.daterangepicker td.in-range-red.in-range {
+  background: #5CEFD8 !important;
   border-radius: 0;
 }
 
@@ -341,28 +351,4 @@
 
 .daterangepicker .ranges {
   font-size: 11px;
-}
-
-.daterangepicker .ranges ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  width: 160px;
-}
-
-.daterangepicker .ranges li {
-  font-size: 13px;
-  background: #f5f5f5;
-  border: 1px solid #f5f5f5;
-  color: #08c;
-  padding: 3px 12px;
-  margin-bottom: 8px;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.daterangepicker .ranges li.active, .daterangepicker .ranges li:hover {
-  background: #08c;
-  border: 1px solid #08c;
-  color: #fff;
 }
