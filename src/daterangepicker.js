@@ -359,14 +359,15 @@
             .on('mouseleave.daterangepicker', 'td.available', $.proxy(this.updateFormInputs, this))
             .on('change.daterangepicker', 'select.yearselect', $.proxy(this.monthOrYearChanged, this))
             .on('change.daterangepicker', 'select.monthselect', $.proxy(this.monthOrYearChanged, this))
-            .on('click.daterangepicker', '.daterangepicker_input input', $.proxy(this.showCalendars, this))
-            .on('change.daterangepicker', '.daterangepicker_input input', $.proxy(this.formInputsChanged, this));
+            //.on('click.daterangepicker', '.daterangepicker_input input', $.proxy(this.showCalendars, this))
+            //.on('change.daterangepicker', '.daterangepicker_input input', $.proxy(this.formInputsChanged, this));
 
         this.container.find('.ranges')
             .on('change.daterangepicker', 'select#datePredef', $.proxy(this.clickRange, this))
             .on('click.daterangepicker', 'select#comp_select', $.proxy(this.clickCompRange, this))
             .on('click.checker','input#checker', $.proxy(this.toggleChecker,this))
             .on('change.daterangepicker', '.daterangepicker_input input', $.proxy(this.formInputsChanged, this))
+            .on('change.daterangepicker', '.daterangepicker_input_comp input', $.proxy(this.formInputsChanged, this))
         this.container.find('.range_inputs')
             .on('click.daterangepicker', 'button.applyBtn', $.proxy(this.clickApply, this))
             .on('click.daterangepicker', 'button.cancelBtn', $.proxy(this.clickCancel, this));
