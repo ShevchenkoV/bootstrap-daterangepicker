@@ -1,18 +1,26 @@
-# Date Range Picker for Bootstrap
+# Date Range Picker for Bootstrap based on http://www.daterangepicker.com
 
-![Improvely.com](http://i.imgur.com/LbAMf3D.png)
+## Install:
+  $grunt
 
-This date range picker component for Bootstrap creates a dropdown menu from which a user can
-select a range of dates. I created it while building the UI for [Improvely](http://www.improvely.com), 
-which needed a way to select date ranges for reports.
+##Code Example:
+      $(document).ready(function() {
+        var options={
+              maxDate:moment(),
+              ranges:{
+                'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                'This Month': [moment().startOf('month'), moment().endOf('month')],
+                'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]}
+           }
 
-Features include limiting the selectable date range, localizable strings and date formats,
-a single date picker mode, optional time picker (for e.g. making appointments or reservations),
-and styles that match the default Bootstrap 3 theme.
+          $('#config-demo').daterangepicker(options, function(start, end, label,compEndDate,compStartDate) {
+             console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
+             console.log(compStartDate.format('YYYY-MM-DD') + ' to ' + compEndDate.format('YYYY-MM-DD'));
+           });
 
-## [Documentation and Live Usage Examples](http://www.daterangepicker.com)
+      });
 
-## [See It In a Live Application](https://awio.iljmp.com/5/drpdemogh)
 
 ## License
 
