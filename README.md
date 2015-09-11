@@ -1,6 +1,7 @@
 # Date Range Picker for Bootstrap based on http://www.daterangepicker.com
 
 ## Install:
+  git clone https://github.com/ShevchenkoV/bootstrap-daterangepicker.git
   $grunt
 
 ##Code Example:
